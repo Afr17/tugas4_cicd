@@ -1,0 +1,26 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - [cite_start]main  # Alur ini jalan otomatis saat kamu push ke branch main [cite: 58, 64]
+
+jobs:
+  deploy:
+    [cite_start]runs-on: ubuntu-latest [cite: 66]
+    steps:
+      - name: Checkout code
+        [cite_start]uses: actions/checkout@v2 [cite: 68, 69]
+
+      - name: Set up SSH
+        [cite_start]uses: webfactory/ssh-agent@v8.5.3 [cite: 70, 71]
+        with:
+          [cite_start]ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }} [cite: 73]
+
+      - name: Deploy to Server
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@43.218.94.165 << 'EOF' [cite: 98]
+          cd /home/ubuntu/runningCICD [cite: 99]
+          sudo git pull origin main 
+          sudo systemctl restart nginx 
+          EOF
